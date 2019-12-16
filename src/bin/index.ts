@@ -2,8 +2,8 @@
 const path = require("path");
 
 const args = process.argv;
-const isDebug = ["-d", "--debug"].some((debugArg) => args.indexOf(debugArg) != -1);
-const isDebugBreak = ["-db", "--debug-brk"].some((debugArg) => args.indexOf(debugArg) != -1);
+const isDebug = ["-d", "--debug"].some((debugArg) => args.indexOf(debugArg) !== -1);
+const isDebugBreak = ["-db", "--debug-brk"].some((debugArg) => args.indexOf(debugArg) !== -1);
 
 const indexPath = path.resolve(__dirname, "../index.cjs.js");
 if (isDebug || isDebugBreak) {

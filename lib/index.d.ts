@@ -7,5 +7,6 @@ declare global {
     const afterEach: typeof runner.afterEach;
     const before: typeof runner.before;
     const beforeEach: typeof runner.beforeEach;
+    const __testRunner: TestRunner;
 }
 export {};

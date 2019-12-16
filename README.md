@@ -24,15 +24,6 @@ Reporting
  --outputPath, -o The output directory to write the final results to.
  --reporters, -r The reporters to use by name or by file path.
 
-Code Coverage
- --srcGlob, -s The source glob for files to track code coverage against.
- --all, -a When set, all files in the given source directory (--srcGlob) are tracked, even if they're not touched by tests.
- --branches, -b What percent (%) of branches must be covered for the test run to pass.
- --functions, -b What percent (%) of branches must be covered for the test run to pass.
- --lines, -b What percent (%) of branches must be covered for the test run to pass.
- --statements, -b What percent (%) of branches must be covered for the test run to pass.
- --ignoreSourceMaps If set, source maps will be ignored for code-coverage.
-
 Parallel Execution
  --idempotentFiles If set, files are treated as idempotent (meaning other file execution does not affect it). 
  --idempotentTests If set, tests are treated as idempotent (meaning other test execution does not affect it). Requires idempotent files.

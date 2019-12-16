@@ -9,7 +9,8 @@
     ],
     "inlineSourceMap": true,
     "outDir": "lib/tests",
-    "declaration": false
+    "declaration": false,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src",

@@ -6,7 +6,6 @@ interface ParsedArgs extends UmbraConfig {
 }
 
 class ArgsParser {
-    private readonly DEFAULT_TIMEOUT_MS = 100;
     private readonly argsParser: ArgumentParser;
 
     constructor() {
@@ -21,36 +20,58 @@ class ArgsParser {
 
     parse(): ParsedArgs {
         const unprocessedArgs = this.argsParser.parseArgs();
-        return {
-            input: unprocessedArgs.input[0],
+        return this.cloneNonNullValues({
+            input: unprocessedArgs.input[0].length > 0 ? unprocessedArgs.input[0] : undefined,
             cacheDir: unprocessedArgs.cacheDir,
             configPath: path.resolve(unprocessedArgs.configPath),
             debug: unprocessedArgs.debug,
             debugBreak: unprocessedArgs.debugBrk,
             watch: unprocessedArgs.watch,
-            timeoutMs: {
-                it: unprocessedArgs.itTimeoutMs,
-                before: unprocessedArgs.beforeTimeoutMs,
-                beforeEach: unprocessedArgs.beforeEachTimeoutMs,
-                after: unprocessedArgs.afterTimeoutMs,
-                afterEach: unprocessedArgs.afterEachTimeoutMs
-            },
-            reporting: {
-                reporters: unprocessedArgs.reporters,
+            timeoutMs: this.cloneNonNullValues({
+                it: unprocessedArgs.timeoutMs || unprocessedArgs.itTimeoutMs,
+                before: unprocessedArgs.timeoutMs || unprocessedArgs.beforeTimeoutMs,
+                beforeEach: unprocessedArgs.timeoutMs || unprocessedArgs.beforeEachTimeoutMs,
+                after: unprocessedArgs.timeoutMs || unprocessedArgs.afterTimeoutMs,
+                afterEach: unprocessedArgs.timeoutMs || unprocessedArgs.afterEachTimeoutMs
+            }),
+            reporting: this.cloneNonNullValues({
+                reporters: unprocessedArgs.reporter ? [unprocessedArgs.reporter] : [],
                 outputPath: unprocessedArgs.outputPath
-            },
-            parallel: {
+            }),
+            parallel: this.cloneNonNullValues({
                 idempotentFiles: unprocessedArgs.idempotentFiles,
                 idempotentTests: unprocessedArgs.idempotentTests
+            })
+        });
+    }
+
+    // ArgsParser does not respect defaultValue of undefined -- it will instead set things to null. Not recursive.
+    private cloneNonNullValues<T>(object: T): T {
+        const newObject = {};
+        for (const key of Object.keys(object)) {
+            const value = object[key];
+
+            if (typeof value === "undefined" || value == null) {
+                continue;
             }
+
+            // boolean values are always defaulted to false, due to ArgParser behavior above.
+            if (typeof value === "boolean" && !value) {
+                continue;
+            }
+
+            newObject[key] = value;
         }
+
+        return Object.keys(newObject).length > 0 ? newObject as T : undefined;
     }
 
     private addGeneralOptions() {
         this.argsParser.addArgument("input", {
             help: "Files, or globs, to run with the Umbra Test Runner",
+            required: false,
             action: "append",
-            nargs: "+"
+            nargs: "*"
         });
 
         this.argsParser.addArgument(["-d", "--debug"], {
@@ -84,8 +105,7 @@ class ArgsParser {
         this.argsParser.addArgument(["--cacheDir"], {
             help: "The directory in which to store umbra cache files used for dynamic optimization.",
             required: false,
-            dest: "cacheDir",
-            defaultValue: ".umbra-cache"
+            dest: "cacheDir"
         });
     }
 
@@ -93,7 +113,6 @@ class ArgsParser {
         this.argsParser.addArgument(["--timeoutMs"], {
             help: "Specifies the general asynchronous timeout value in milliseconds. This affects *all* async methods (it, before, after, etc.)",
             required: false,
-            defaultValue: this.DEFAULT_TIMEOUT_MS,
             dest: "timeoutMs"
         });
 
@@ -101,7 +120,6 @@ class ArgsParser {
             this.argsParser.addArgument([`--${value}TimeoutMs`], {
                 help: `Specifies the asynchronous timeout value for \`${value}\` blocks in milliseconds. This overrides general settings.`,
                 required: false,
-                defaultValue: this.DEFAULT_TIMEOUT_MS,
                 dest: `${value}TimeoutMs`
             });
         }
@@ -114,12 +132,10 @@ class ArgsParser {
             dest: "outputPath"
         });
 
-        this.argsParser.addArgument(["-r", "--reporters"], {
-            help: "The output directory to write the final results to.",
+        this.argsParser.addArgument(["-r", "--reporter"], {
+            help: "The reporter to use.",
             required: false,
-            action: "append",
-            defaultValue: [],
-            dest: "reporters"
+            dest: "reporter"
         });
     }
 

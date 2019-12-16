@@ -1,3 +1,4 @@
 module.exports = {
-    debug: true
+    debug: true,
+    input: ["lib/tests/tst/*.test.js"]
 };
