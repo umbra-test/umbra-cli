@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "lib": [
+      "es5",
+      "es6"
+    ],
+    "inlineSourceMap": true,
+    "outDir": "lib/tests",
+    "declaration": false
+  },
+  "include": [
+    "src",
+    "tst"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
