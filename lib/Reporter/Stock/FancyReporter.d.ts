@@ -1,4 +1,4 @@
-import { RunResults } from "umbra-test-runner";
+import { RunResults } from "@umbra-test/umbra-test-runner";
 import { Reporter } from "../Reporter";
 import { WriteStreamInterceptor } from "../../WriteStreamInterceptor";
 /**

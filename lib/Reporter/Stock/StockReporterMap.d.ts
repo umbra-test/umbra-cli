@@ -1,5 +1,5 @@
 import { FancyReporter } from "./FancyReporter";
 declare const StockReporterMap: {
-    "fancy": typeof FancyReporter;
+    fancy: typeof FancyReporter;
 };
 export { StockReporterMap };

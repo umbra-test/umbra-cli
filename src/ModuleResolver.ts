@@ -1,6 +1,6 @@
 import fastGlob from "fast-glob";
 import * as path from "path";
-import {TestRunner} from "umbra-test-runner";
+import {TestRunner} from "@umbra-test/umbra-test-runner";
 
 class ModuleResolver {
 

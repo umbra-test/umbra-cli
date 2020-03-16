@@ -1,4 +1,4 @@
-import { TestRunner } from "umbra-test-runner";
+import { TestRunner } from "@umbra-test/umbra-test-runner";
 declare class ModuleResolver {
     private readonly testRunner;
     constructor(testRunner: TestRunner);

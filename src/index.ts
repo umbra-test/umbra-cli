@@ -1,7 +1,7 @@
 import {spawnSync} from "child_process";
 import * as path from "path";
 import {existsSync, mkdirSync} from "fs";
-import {TestRunner} from "umbra-test-runner";
+import {TestRunner} from "@umbra-test/umbra-test-runner";
 import {ArgsParser, ParsedArgs} from "./Config/ArgsParser";
 import {ConfigMerger} from "./Config/ConfigMerger";
 import {Reporter} from "./Reporter/Reporter";

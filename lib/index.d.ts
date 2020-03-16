@@ -1,4 +1,4 @@
-import { TestRunner } from "umbra-test-runner";
+import { TestRunner } from "@umbra-test/umbra-test-runner";
 declare const runner: TestRunner;
 declare global {
     const it: typeof runner.it;
