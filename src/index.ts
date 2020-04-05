@@ -8,7 +8,7 @@ import {Reporter} from "./Reporter/Reporter";
 import {StockReporterMap} from "./Reporter/Stock/StockReporterMap";
 import {ModuleResolver} from "./ModuleResolver";
 import {DefaultConfig} from "./Config/DefaultConfig";
-import {FancyReporter} from "./Reporter/Stock/FancyReporter";
+import {BasicReporter} from "./Reporter/Stock/BasicReporter";
 
 const parser = new ArgsParser();
 const argConfig: ParsedArgs = parser.parse();
@@ -41,7 +41,7 @@ const runner: TestRunner = new TestRunner({
 const reporterNames = finalConfig.reporting.reporters;
 let reporters: Reporter[];
 if (reporterNames.length === 0) {
-    reporters = [new FancyReporter()];
+    reporters = [new BasicReporter()];
 } else {
     reporters = reporterNames.map((name) => {
         try {
