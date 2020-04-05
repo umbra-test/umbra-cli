@@ -1,11 +1,10 @@
+import ansiEscapes from "ansi-escapes";
+import createCallsiteRecord from "callsite-record";
+import chalk from "chalk";
 import {RunResults} from "@umbra-test/umbra-test-runner";
 
-import {Reporter} from "../Reporter";
-import chalk from "chalk";
-import ansiEscapes from "ansi-escapes";
 import {WriteStreamInterceptor} from "../../WriteStreamInterceptor";
-import createCallsiteRecord from "callsite-record";
-
+import {BaseReporter} from "./BaseReporter";
 
 enum TestResult {
     SUCCESS,
@@ -15,18 +14,14 @@ enum TestResult {
 }
 
 /**
- * A port of Mocha's nyan reporter, for obvious reasons.
+ * A fancier reporter, with spinners and other fancy things. Mostly to play around with ideas.
  */
-class FancyReporter implements Reporter {
+class FancyReporter extends BaseReporter {
 
     private readonly stdOutInterceptor: WriteStreamInterceptor;
     private readonly stdErrInterceptor: WriteStreamInterceptor;
 
     private timer: NodeJS.Timeout = null;
-
-    private activeFilePath: string;
-    private currentIndentLevel = 0;
-    private lines: string[] = [];
 
     private spinnerIndex = 0;
 
@@ -34,6 +29,8 @@ class FancyReporter implements Reporter {
 
     constructor(stdOutInterceptor = new WriteStreamInterceptor(),
                 stdErrInterceptor = new WriteStreamInterceptor()) {
+        super();
+
         this.stdOutInterceptor = stdOutInterceptor;
         this.stdErrInterceptor = stdErrInterceptor;
     }
@@ -50,39 +47,26 @@ class FancyReporter implements Reporter {
         return Promise.resolve();
     }
 
-    activeFileChanged = (absolutePath: string) => {
-        this.activeFilePath = absolutePath;
-        this.lines.push(chalk.cyan(">>") + ` ${this.activeFilePath}`);
-    };
-
-    afterDescribe = (title: string, elapsedMs: number) => {
-        this.currentIndentLevel--;
-    };
-
-    beforeDescribe = (title: string) => {
+    beforeDescribe(title: string) {
         this.writeLine(this.getIndentedText(chalk.cyan("⤷") + ` ${title}`));
-        this.currentIndentLevel++;
+
+        super.beforeDescribe(title);
     };
 
-    beforeTest = (title: string) => {
+    beforeTest(title: string) {
         this.startSpinner(title);
 
-        this.pending++;
-        this.currentIndentLevel++;
+        super.beforeTest(title);
     };
 
-    runEnd = (results: RunResults) => {
+    runEnd(results: RunResults) {
         this.stdOutInterceptor.writeDirect("\u001B[?25h");
 
         this.stdOutInterceptor.stop();
         this.stdErrInterceptor.stop();
     };
 
-    runStart = () => {
-
-    };
-
-    testFail = (title: string, error: Error, elapsedMs: number) => {
+    testFail(title: string, error: Error, elapsedMs: number) {
         this.stopSpinner(TestResult.FAIL);
 
         const prettyStack = createCallsiteRecord({forError: error}).renderSync({
@@ -95,37 +79,26 @@ class FancyReporter implements Reporter {
         });
         this.stdErrInterceptor.writeDirect(prettyStack + "\n\n");
 
-        this.pending--;
-        this.failures++;
-        this.currentIndentLevel--;
+        super.testFail(title, error, elapsedMs);
     };
 
-    testTimeout = (title: string, elapsedMs: number, timeoutMs: number) => {
+    testTimeout(title: string, elapsedMs: number, timeoutMs: number) {
         this.stopSpinner(TestResult.TIMEOUT);
 
-        this.pending--;
-        this.failures++;
-        this.currentIndentLevel--;
+        super.testTimeout(title, elapsedMs, timeoutMs);
     };
 
-    testSkipped = (title: string) => {
+    testSkipped(title: string) {
         this.stopSpinner(TestResult.SKIPPED);
 
-        this.pending--;
-        this.currentIndentLevel--;
+        super.testSkipped(title);
     };
 
-    testSuccess = (title: string, elapsedMs: number) => {
+    testSuccess(title: string, elapsedMs: number) {
         this.stopSpinner(TestResult.SUCCESS);
 
-        this.pending--;
-        this.passes++;
-        this.currentIndentLevel--;
+        super.testSuccess(title, elapsedMs);
     };
-
-    private passes: number = 0;
-    private failures: number = 0;
-    private pending: number = 0;
 
     private onProcessLog = (text: string): string | void => {
         //return text;
@@ -166,14 +139,6 @@ class FancyReporter implements Reporter {
         }
         this.stdOutInterceptor.writeDirect(ansiEscapes.cursorNextLine);
         this.stdOutInterceptor.writeDirect("\n");
-    }
-
-    private getIndentedText(text: string): string {
-        let str = "";
-        for (let i = 0; i < this.currentIndentLevel; i++) {
-            str += " ";
-        }
-        return str + text;
     }
 }
 

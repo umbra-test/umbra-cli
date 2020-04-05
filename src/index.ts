@@ -57,13 +57,13 @@ if (reporterNames.length === 0) {
 }
 
 for (const reporter of reporters) {
-    runner.on("activeFileChanged", reporter.activeFileChanged);
-    runner.on("beforeTest", reporter.beforeTest);
-    runner.on("testSuccess", reporter.testSuccess);
-    runner.on("testFail", reporter.testFail);
-    runner.on("testTimeout", reporter.testTimeout);
-    runner.on("beforeDescribe", reporter.beforeDescribe);
-    runner.on("afterDescribe", reporter.afterDescribe);
+    runner.on("activeFileChanged", reporter.activeFileChanged.bind(reporter));
+    runner.on("beforeTest", reporter.beforeTest.bind(reporter));
+    runner.on("testSuccess", reporter.testSuccess.bind(reporter));
+    runner.on("testFail", reporter.testFail.bind(reporter));
+    runner.on("testTimeout", reporter.testTimeout.bind(reporter));
+    runner.on("beforeDescribe", reporter.beforeDescribe.bind(reporter));
+    runner.on("afterDescribe", reporter.afterDescribe.bind(reporter));
 }
 
 // Expose global methods
