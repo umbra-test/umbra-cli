@@ -34,6 +34,8 @@ class BasicReporter extends BaseReporter {
     };
 
     private printPrettyStackTrace(error: Error): void {
+        console.log(error.message);
+
         const prettyStack = createCallsiteRecord({forError: error}).renderSync({
             /* TODO: Determine whether to default node_module stripping to true
             stackFilter(frame) {

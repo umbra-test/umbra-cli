@@ -68,6 +68,7 @@ class FancyReporter extends BaseReporter {
 
     testFail(title: string, error: Error, elapsedMs: number) {
         this.stopSpinner(TestResult.FAIL);
+        this.stdErrInterceptor.writeDirect(error.message + "\n");
 
         const prettyStack = createCallsiteRecord({forError: error}).renderSync({
             /* TODO: Determine whether to default node_module stripping to true
