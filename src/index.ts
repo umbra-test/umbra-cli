@@ -1,6 +1,7 @@
 import {spawnSync} from "child_process";
 import * as path from "path";
 import {existsSync, mkdirSync} from "fs";
+import {install as installSourceMapSupport} from "source-map-support";
 import {TestRunner} from "@umbra-test/umbra-test-runner";
 import {ArgsParser, ParsedArgs} from "./Config/ArgsParser";
 import {ConfigMerger} from "./Config/ConfigMerger";
@@ -9,6 +10,8 @@ import {StockReporterMap} from "./Reporter/Stock/StockReporterMap";
 import {ModuleResolver} from "./ModuleResolver";
 import {DefaultConfig} from "./Config/DefaultConfig";
 import {BasicReporter} from "./Reporter/Stock/BasicReporter";
+
+installSourceMapSupport();
 
 const parser = new ArgsParser();
 const argConfig: ParsedArgs = parser.parse();
