@@ -13,6 +13,6 @@ export default [{
         format: "es"
     }],
     plugins: [
-        // terser()
+        terser()
     ]
 }];
