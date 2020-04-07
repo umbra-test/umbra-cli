@@ -17,7 +17,7 @@ class BaseReporter implements Reporter {
     private pending: number = 0;
 
     initialize(): Promise<void> {
-        console.log(`\n${chalk.whiteBright("☾")} Umbra Test`);
+        console.log("\n" + chalk.whiteBright("☾ Umbra Test"));
         BaseReporter.drawHorizontalLine();
 
         return Promise.resolve();
