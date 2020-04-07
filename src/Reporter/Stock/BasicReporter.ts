@@ -1,11 +1,14 @@
 import chalk from "chalk";
 
-import {BaseReporter} from "./BaseReporter";
+import { BaseReporter } from "./BaseReporter";
+import { RunResults } from "@umbra-test/umbra-test-runner";
 
 /**
  * A basic reporter. Nothing fancy.
  */
 class BasicReporter extends BaseReporter {
+
+    private startTime: number;
 
     beforeDescribe(title: string) {
         super.beforeDescribe(title);
@@ -22,15 +25,19 @@ class BasicReporter extends BaseReporter {
     testFail(title: string, error: Error, elapsedMs: number) {
         super.testFail(title, error, elapsedMs);
 
-        console.log(this.getIndentedText(chalk.redBright(`✖ FAIL ✖ `), 2));
+        console.log(this.getIndentedText(chalk.redBright(`✖ FAIL ✖ ${title}`), 2));
         this.printPrettyStackTrace(error);
     };
 
     testTimeout(title: string, elapsedMs: number, timeoutMs: number) {
         super.testTimeout(title, elapsedMs, timeoutMs);
 
-        console.log(this.getIndentedText(chalk.redBright(`✖ TIMED OUT ✖ `), 2));
+        console.log(this.getIndentedText(chalk.redBright(`✖ TIMED OUT ✖ ${title}`), 2));
     };
+
+    runEnd(results: RunResults) {
+        console.log(`Tests completed in ${results.elapsedTimeMs}ms. ${results.totalTests} tests run ${results.totalSuccesses} succeeded ${results.totalFailures} failed.`);
+    }
 
     private printPrettyStackTrace(error: Error): void {
         console.log(error.message);
@@ -50,4 +57,4 @@ class BasicReporter extends BaseReporter {
 
 }
 
-export {BasicReporter};
+export { BasicReporter };
