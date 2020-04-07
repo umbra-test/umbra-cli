@@ -82,10 +82,17 @@ declare global {
     const __testRunner: TestRunner;
 }
 
+// Note: using bind results in property loss, so `it` has to be re-assigned.
+const itOnly = runner.it.only.bind(runner);
+const describeOnly = runner.describe.only.bind(runner);
+
 const globalFunctions = ["it", "describe", "after", "afterEach", "before", "beforeEach"];
 for (const fnName of globalFunctions) {
-    global[fnName] = runner[fnName];
+    global[fnName] = runner[fnName].bind(runner);
 }
+global["it"]["only"] = itOnly;
+global["describe"]["only"] = describeOnly;
+
 global["__testRunner"] = runner;
 
 const moduleResolver = new ModuleResolver(runner);

@@ -1,4 +1,3 @@
-import createCallsiteRecord from "callsite-record";
 import chalk from "chalk";
 
 import {BaseReporter} from "./BaseReporter";
@@ -36,15 +35,17 @@ class BasicReporter extends BaseReporter {
     private printPrettyStackTrace(error: Error): void {
         console.log(error.message);
 
+        /* Temporarily disable pretty stack traces due to an unexpected parse error popping up for some errors.
         const prettyStack = createCallsiteRecord({forError: error}).renderSync({
-            /* TODO: Determine whether to default node_module stripping to true
+            // TODO: Determine whether to default node_module stripping to true
             stackFilter(frame) {
                 return !frame.fileName.includes("node_modules");
             },
-             */
+
             frameSize: 3
         });
         console.log(prettyStack + "\n\n");
+        */
     }
 
 }
