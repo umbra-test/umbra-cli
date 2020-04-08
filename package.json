@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/umbra-test/umbra-cli.git"
   },
+  "bin": {
+    "umbra": "lib/bin/index.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json && rollup -c",
     "test": "tsc -p tsconfig-tests.json",
