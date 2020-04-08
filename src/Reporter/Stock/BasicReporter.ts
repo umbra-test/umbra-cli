@@ -45,7 +45,7 @@ class BasicReporter extends BaseReporter {
     }
 
     runEnd(results: RunResults) {
-        console.log(`Tests: ${chalk.red(results.totalFailures)} failures, ${chalk.yellow(results.totalTimeouts)} timeouts, ${chalk.green(results.totalSuccesses)} passed, ${results.totalSuccesses} total`);
+        console.log(`Tests: ${chalk.red(results.totalFailures)} failures, ${chalk.yellow(results.totalTimeouts)} timeouts, ${chalk.green(results.totalSuccesses)} passed, ${results.totalTests} total`);
         console.log(`Time:  ${results.elapsedTimeMs}ms`);
         console.log(`Files: ${this.filesEvaluated}`);
     }
