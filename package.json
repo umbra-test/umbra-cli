@@ -44,11 +44,14 @@
     "fast-glob": "^3.2.2"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
     "@types/argparse": "^1.0.38",
     "@types/chai": "^4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.149",
+    "@types/node": "^13.11.1",
     "@types/sinon": "^7.5.2",
     "@types/sinon-chai": "^3.2.3",
     "@types/source-map-support": "^0.5.1",
