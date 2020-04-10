@@ -1,7 +1,7 @@
 const DEFAULT_TIMEOUT_MS = 100;
 
 const DefaultConfig: UmbraConfig = {
-    input: [],
+    input: ["./**/*.test.js"],
     debug: false,
     debugBreak: false,
     watch: false,

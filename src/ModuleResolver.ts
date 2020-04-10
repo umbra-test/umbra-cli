@@ -16,7 +16,7 @@ class ModuleResolver {
      * @return a promise which will be resolved when all modules are.
      */
     public resolveGlob(inputGlobs: string[]): Promise<void> {
-        return fastGlob(inputGlobs)
+        return fastGlob(inputGlobs, { ignore: ["node_modules/**/*"] })
             .then((resolvedEntries) => {
                 for (const entry of resolvedEntries) {
                     const resolvedPath = path.resolve(entry.toString());
