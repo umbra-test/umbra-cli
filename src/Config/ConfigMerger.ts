@@ -6,6 +6,10 @@ class ConfigMerger {
      */
     merge(baseConfig: UmbraConfig, ...configs: Partial<UmbraConfig>[]): UmbraConfig {
         for (const config of configs) {
+            if (!config) {
+                continue;
+            }
+            
             for (const attribute in config) {
                 if (config.hasOwnProperty(attribute)) {
                     const value = config[attribute];
