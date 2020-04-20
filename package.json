@@ -1,7 +1,7 @@
 {
   "name": "umbra-cli",
   "description": "Exposes a mechanism for running Umbra tests via CLI.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/umbra-test/umbra-cli.git"
