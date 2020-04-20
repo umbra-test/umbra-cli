@@ -4,6 +4,7 @@ import { ConfigFileLoader } from "./ConfigFileLoader";
 import { promises } from "fs";
 import { PackageJsonConfigLoader } from "./PackageJsonConfigLoader";
 import { ConfigMerger } from "./ConfigMerger";
+import { UmbraConfig } from "../Config/UmbraConfig";
 declare class CompositeConfigResolver {
     private readonly statPromise;
     private readonly cliConfigResolver;

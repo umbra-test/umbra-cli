@@ -1,3 +1,5 @@
+import {UmbraConfig} from "../Config/UmbraConfig";
+
 const DEFAULT_TIMEOUT_MS = 100;
 
 const DefaultConfig: UmbraConfig = {

@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import { promises as fsPromises } from "fs";
 import { SimpleTSCWrapper } from "./SimpleTSCWrapper";
+import { UmbraConfig } from "../Config/UmbraConfig";
 declare class ConfigFileLoader {
     private readonly mkdirPromise;
     private readonly statPromise;

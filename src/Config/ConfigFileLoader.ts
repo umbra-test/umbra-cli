@@ -1,6 +1,7 @@
 import {promises as fsPromises} from "fs";
 import * as path from "path";
 import {SimpleTSCWrapper} from "./SimpleTSCWrapper";
+import {UmbraConfig} from "../Config/UmbraConfig";
 
 class ConfigFileLoader {
 

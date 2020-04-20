@@ -1,3 +1,4 @@
+/// <reference path="./StartupStages/ExportGlobals.ts" />
 import {install as installSourceMapSupport} from "source-map-support";
 import {SelectReporters} from "./StartupStages/SelectReporters";
 import {AttachReporters} from "./StartupStages/AttachReporters";

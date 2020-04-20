@@ -1,3 +1,5 @@
+import {UmbraConfig} from "../Config/UmbraConfig";
+
 class ConfigMerger {
 
     /**

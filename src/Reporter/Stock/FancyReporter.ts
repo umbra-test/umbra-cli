@@ -1,6 +1,6 @@
 import ansiEscapes from "ansi-escapes";
 import createCallsiteRecord from "callsite-record";
-import chalk from "chalk";
+import colors from "ansi-colors";
 import {RunResults} from "@umbra-test/umbra-test-runner";
 
 import {WriteStreamInterceptor} from "../../WriteStreamInterceptor";
@@ -40,15 +40,15 @@ class FancyReporter extends BaseReporter {
         this.stdErrInterceptor.start(process.stderr, this.onProcessLog);
 
         this.stdOutInterceptor.writeDirect("\u001B[?25l");
-        this.writeLine(`\n${chalk.whiteBright("☾")} Umbra Test`);
-        this.writeLine(chalk.white(`⤷ All logs will be intercepted and written to a local file.`));
+        this.writeLine(`\n${colors.whiteBright("☾")} Umbra Test`);
+        this.writeLine(colors.white(`⤷ All logs will be intercepted and written to a local file.`));
         this.drawHorizontalLine();
 
         return Promise.resolve();
     }
 
     beforeDescribe(title: string) {
-        this.writeLine(this.getIndentedText(chalk.cyan("⤷") + ` ${title}`));
+        this.writeLine(this.getIndentedText(colors.cyan("⤷") + ` ${title}`));
 
         super.beforeDescribe(title);
     };
@@ -117,13 +117,13 @@ class FancyReporter extends BaseReporter {
     }
 
     private startSpinner(text: string): void {
-        this.stdOutInterceptor.writeDirect(this.getIndentedText(chalk.yellow(this.spinnerIcons[this.spinnerIndex]) + " " + text));
+        this.stdOutInterceptor.writeDirect(this.getIndentedText(colors.yellow(this.spinnerIcons[this.spinnerIndex]) + " " + text));
         this.stdOutInterceptor.writeDirect(ansiEscapes.cursorLeft);
         this.stdOutInterceptor.writeDirect(ansiEscapes.cursorForward(this.currentIndentLevel + 1));
         this.timer = setInterval(() => {
             this.stdOutInterceptor.writeDirect(ansiEscapes.cursorBackward(1));
             this.spinnerIndex = (this.spinnerIndex + 1) % (this.spinnerIcons.length - 1);
-            this.stdOutInterceptor.writeDirect(chalk.yellow(this.spinnerIcons[this.spinnerIndex]));
+            this.stdOutInterceptor.writeDirect(colors.yellow(this.spinnerIcons[this.spinnerIndex]));
         }, 200);
     }
 
@@ -132,11 +132,11 @@ class FancyReporter extends BaseReporter {
 
         this.stdOutInterceptor.writeDirect(ansiEscapes.cursorBackward(1));
         if (result === TestResult.FAIL) {
-            this.stdOutInterceptor.writeDirect(chalk.redBright("✘"));
+            this.stdOutInterceptor.writeDirect(colors.redBright("✘"));
         } else if (result === TestResult.SUCCESS) {
-            this.stdOutInterceptor.writeDirect(chalk.greenBright("✓"));
+            this.stdOutInterceptor.writeDirect(colors.greenBright("✓"));
         } else if (result === TestResult.TIMEOUT) {
-            this.stdOutInterceptor.writeDirect(chalk.redBright("⏲"));
+            this.stdOutInterceptor.writeDirect(colors.redBright("⏲"));
         }
         this.stdOutInterceptor.writeDirect(ansiEscapes.cursorNextLine);
         this.stdOutInterceptor.writeDirect("\n");

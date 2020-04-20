@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import colors from "ansi-colors";
 
 import {BaseReporter} from "./BaseReporter";
 import {RunResults} from "@umbra-test/umbra-test-runner";
@@ -15,7 +15,7 @@ class BasicReporter extends BaseReporter {
         super.beforeDescribe(title);
 
         if (this.verboseMode) {
-            console.log(this.getIndentedText(chalk.cyan("⤷ ") + title));
+            console.log(this.getIndentedText(colors.cyan("⤷ ") + title));
         }
     };
 
@@ -23,21 +23,21 @@ class BasicReporter extends BaseReporter {
         super.beforeTest(title);
 
         if (this.verboseMode) {
-            console.log(this.getIndentedText(chalk.cyan("⤷ ") + title));
+            console.log(this.getIndentedText(colors.cyan("⤷ ") + title));
         }
     };
 
     testFail(title: string, error: Error, elapsedMs: number) {
         super.testFail(title, error, elapsedMs);
 
-        console.log(this.getIndentedText(chalk.redBright(`✖ `) + title));
+        console.log(this.getIndentedText(colors.redBright(`✖ `) + title));
         this.printPrettyStackTrace(error);
     };
 
     testTimeout(title: string, elapsedMs: number, timeoutMs: number) {
         super.testTimeout(title, elapsedMs, timeoutMs);
 
-        console.log(this.getIndentedText(chalk.redBright(`⏲ `) + title));
+        console.log(this.getIndentedText(colors.redBright(`⏲ `) + title));
     };
 
     testSuccess(title: string, elapsedMs: number) {
@@ -45,7 +45,7 @@ class BasicReporter extends BaseReporter {
     }
 
     runEnd(results: RunResults) {
-        console.log(`Tests: ${chalk.red(results.totalFailures)} failures, ${chalk.yellow(results.totalTimeouts)} timeouts, ${chalk.green(results.totalSuccesses)} passed, ${results.totalTests} total`);
+        console.log(`Tests: ${colors.red(results.totalFailures.toString())} failures, ${colors.yellow(results.totalTimeouts.toString())} timeouts, ${colors.green(results.totalSuccesses.toString())} passed, ${results.totalTests} total`);
         console.log(`Time:  ${results.elapsedTimeMs}ms`);
         console.log(`Files: ${this.filesEvaluated}`);
     }
@@ -55,7 +55,7 @@ class BasicReporter extends BaseReporter {
     }
 
     private printPrettyStackTrace(error: Error): void {
-        console.log(this.getIndentedText(chalk.red("⤷ ") + error.message + "\n", 1));
+        console.log(this.getIndentedText(colors.red("⤷ ") + error.message + "\n", 1));
 
         /* Temporarily disable pretty stack traces due to an unexpected parse error popping up for some errors.
         const prettyStack = createCallsiteRecord({forError: error}).renderSync({

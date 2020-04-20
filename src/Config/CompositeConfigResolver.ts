@@ -4,6 +4,7 @@ import {DefaultConfig} from "./DefaultConfig";
 import {promises} from "fs";
 import {PackageJsonConfigLoader} from "./PackageJsonConfigLoader";
 import {ConfigMerger} from "./ConfigMerger";
+import {UmbraConfig} from "../Config/UmbraConfig";
 
 const DEFAULT_TS_CONFIG = "./umbra.config.ts";
 const DEFAULT_JS_CONFIG = "./umbra.config.js";

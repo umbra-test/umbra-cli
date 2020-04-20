@@ -1,3 +1,4 @@
+import { UmbraConfig } from "../Config/UmbraConfig";
 declare class ConfigMerger {
     /**
      * Super basic helper method for merging configurations together. Overwrites earlier configs with later ones, with

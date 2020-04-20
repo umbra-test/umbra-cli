@@ -1,4 +1,5 @@
 import * as path from "path";
+import {UmbraConfig} from "../Config/UmbraConfig";
 
 class PackageJsonConfigLoader {
     private readonly requireRef: NodeRequire;

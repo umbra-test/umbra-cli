@@ -1,7 +1,7 @@
 import {RunResults} from "@umbra-test/umbra-test-runner";
 
 import {Reporter} from "../Reporter";
-import chalk from "chalk";
+import colors from "ansi-colors";
 
 /**
  * Base handling of common console reporter functionality, such as tracking of passes, failures, and indentation levels
@@ -17,7 +17,7 @@ class BaseReporter implements Reporter {
     private pending: number = 0;
 
     initialize(): Promise<void> {
-        console.log("\n" + chalk.whiteBright("☾ Umbra Test"));
+        console.log("\n" + colors.whiteBright("☾ Umbra Test"));
         BaseReporter.drawHorizontalLine();
 
         return Promise.resolve();

@@ -62,3 +62,7 @@ interface UmbraConfig {
         idempotentTests: boolean;
     };
 }
+
+export {
+    UmbraConfig
+};

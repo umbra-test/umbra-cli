@@ -1,14 +1,13 @@
 import {TestRunner} from "@umbra-test/umbra-test-runner";
 import {StartupContext} from "./StartupContext";
 
-let typeRunner: TestRunner;
 declare global {
-    const it: typeof typeRunner.it;
-    const describe: typeof typeRunner.describe;
-    const after: typeof typeRunner.after;
-    const afterEach: typeof typeRunner.afterEach;
-    const before: typeof typeRunner.before;
-    const beforeEach: typeof typeRunner.beforeEach;
+    const it: TestRunner["it"];
+    const describe: TestRunner["describe"];
+    const after: TestRunner["after"];
+    const afterEach: TestRunner["afterEach"];
+    const before: TestRunner["before"];
+    const beforeEach: TestRunner["beforeEach"];
 
     // Used for extensions, specifically umbra-mock.
     const __testRunner: TestRunner;
