@@ -9,6 +9,8 @@
   "bin": {
     "umbra": "lib/index.cjs.js"
   },
+  "main": "lib/index.cjs.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json && rollup -c",
     "test": "tsc -p tsconfig-tests.json",

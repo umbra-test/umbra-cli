@@ -10,13 +10,11 @@ export default [{
         file: "lib/index.cjs.js",
         format: "cjs",
         interop: false,
-        sourcemap: true,
-        banner: "#!/usr/bin/env node"
+        sourcemap: "inline"
     }, {
         file: "lib/index.esm.js",
         format: "es",
-        sourcemap: true,
-        banner: "#!/usr/bin/env node"
+        sourcemap: "inline"
     }],
     plugins: [
         resolve({

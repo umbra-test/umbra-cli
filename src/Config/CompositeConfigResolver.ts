@@ -39,19 +39,19 @@ class CompositeConfigResolver {
     private async getFileConfig(cliConfigPath: string): Promise<Partial<UmbraConfig>> {
         let fileConfig: Partial<UmbraConfig>;
         if (cliConfigPath) {
-            return this.configFileLoader.loadConfig(cliConfigPath, DefaultConfig.cacheDir);
+            return await this.configFileLoader.loadConfig(cliConfigPath, DefaultConfig.cacheDir);
         }
 
         // TypeScript is preferred, if it exists.
         try {
-            return this.configFileLoader.loadConfig(DEFAULT_TS_CONFIG, DefaultConfig.cacheDir);
+            return await this.configFileLoader.loadConfig(DEFAULT_TS_CONFIG, DefaultConfig.cacheDir);
         } catch (error) {
             // Intentionally blank. TODO: Add verbose logging.
         }
 
         if (!fileConfig) {
             try {
-                return this.configFileLoader.loadConfig(DEFAULT_JS_CONFIG, DefaultConfig.cacheDir);
+                return await this.configFileLoader.loadConfig(DEFAULT_JS_CONFIG, DefaultConfig.cacheDir);
             } catch (error) {
                 // Intentionally blank. TODO: Add verbose logging.
             }
