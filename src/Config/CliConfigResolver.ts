@@ -1,5 +1,4 @@
-import {ArgumentParser} from "argparse";
-import * as path from "path";
+import {SimpleArgParser} from "./SimpleArgParser";
 
 interface CliConfig {
     /**
@@ -29,83 +28,23 @@ interface CliConfig {
     configPath: string;
 }
 
-
 class CliConfigResolver {
-    private readonly argsParser: ArgumentParser;
+    private readonly argParser: SimpleArgParser<CliConfig>;
 
-    constructor() {
-        this.argsParser = new ArgumentParser({
-            description: "Run tests using the Umbra test framework."
-        });
-        this.addGeneralOptions();
+    constructor(argParser = new SimpleArgParser()) {
+        this.argParser = argParser;
     }
 
     parse(argv: string[]): CliConfig {
-        const unprocessedArgs = this.argsParser.parseArgs(argv);
-        return CliConfigResolver.cloneNonNullValues({
-            input: unprocessedArgs.input[0].length > 0 ? unprocessedArgs.input[0] : null,
-            configPath: unprocessedArgs.configPath ? path.resolve(unprocessedArgs.configPath) : null,
-            debug: unprocessedArgs.debug,
-            debugBreak: unprocessedArgs.debugBreak,
-            watch: unprocessedArgs.watch
-        });
-    }
+        const results = this.argParser
+            .addArgument("input", [], "Files, or globs, to run with the Umbra Test Runner", false, "trailing")
+            .addArgument("debug", ["-d", "--inspect"], "Enables the Node debugger", false, "boolean")
+            .addArgument("debugBreak", ["-db", "--debug-brk", "--debug-break", "--inspect-break"], "Enables the Node debugger, breaking once the first test is evaluated", false, "boolean")
+            .addArgument("watch", ["-w"], "Enables watch mode, which will evaluate all tests first and then again once changes occur", false, "boolean")
+            .addArgument("configPath", ["--config", "-c"], "Sets the config file path", false, "string")
+            .parse(argv);
 
-    // ArgsParser does not respect defaultValue of undefined -- it will instead set things to null. Not recursive.
-    private static cloneNonNullValues<T>(object: T): T {
-        const newObject = {};
-        for (const key of Object.keys(object)) {
-            const value = object[key];
-
-            if (typeof value === "undefined" || value == null) {
-                continue;
-            }
-
-            // boolean values are always defaulted to false, due to ArgParser behavior above.
-            if (typeof value === "boolean" && !value) {
-                continue;
-            }
-
-            newObject[key] = value;
-        }
-
-        return Object.keys(newObject).length > 0 ? newObject as T : {} as T;
-    }
-
-    private addGeneralOptions() {
-        this.argsParser.addArgument("input", {
-            help: "Files, or globs, to run with the Umbra Test Runner",
-            required: false,
-            action: "append",
-            nargs: "*"
-        });
-
-        this.argsParser.addArgument(["-d", "--debug", "--inspect"], {
-            help: "Enables the Node debugger",
-            required: false,
-            action: "storeTrue",
-            dest: "debug"
-        });
-
-        this.argsParser.addArgument(["-db", "--debug-brk", "--debug-break", "--inspect-break"], {
-            help: "Enables the Node debugger, breaking once the first test is evaluated",
-            required: false,
-            action: "storeTrue",
-            dest: "debugBreak"
-        });
-
-        this.argsParser.addArgument(["-w", "--watch"], {
-            help: "Enables watch mode, which will evaluate all tests first and then again once changes occur.",
-            required: false,
-            action: "storeTrue",
-            dest: "watch"
-        });
-
-        this.argsParser.addArgument(["-c", "--config"], {
-            help: "Sets the config file path.",
-            required: false,
-            dest: "configPath"
-        });
+        return results as CliConfig;
     }
 }
 

@@ -25,7 +25,7 @@ class CompositeConfigResolver {
     }
 
     async resolve(argv: string[]): Promise<UmbraConfig> {
-        const cliConfig = this.cliConfigResolver.parse(argv.slice(2));
+        const cliConfig = this.cliConfigResolver.parse(argv);
         const fileConfig = await this.getFileConfig(cliConfig.configPath);
         const packageJsonConfig = this.packageJsonConfigLoader.loadConfig();
 

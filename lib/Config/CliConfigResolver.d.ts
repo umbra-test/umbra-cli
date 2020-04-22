@@ -1,3 +1,4 @@
+import { SimpleArgParser } from "./SimpleArgParser";
 interface CliConfig {
     /**
      * List of globs pointing to test files to execute.
@@ -22,10 +23,8 @@ interface CliConfig {
     configPath: string;
 }
 declare class CliConfigResolver {
-    private readonly argsParser;
-    constructor();
+    private readonly argParser;
+    constructor(argParser?: SimpleArgParser<unknown>);
     parse(argv: string[]): CliConfig;
-    private static cloneNonNullValues;
-    private addGeneralOptions;
 }
 export { CliConfigResolver, CliConfig };
