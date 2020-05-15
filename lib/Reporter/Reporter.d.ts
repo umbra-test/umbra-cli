@@ -12,4 +12,7 @@ interface Reporter {
     afterDescribe(title: string, elapsedMs: number): void;
     runEnd(results: RunResults): void;
 }
-export { Reporter };
+interface ReporterConstructor {
+    new (): Reporter;
+}
+export { Reporter, ReporterConstructor };

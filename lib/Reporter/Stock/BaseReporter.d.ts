@@ -5,7 +5,7 @@ import { Reporter } from "../Reporter";
  * assuming tree-like test result rendering.
  */
 declare class BaseReporter implements Reporter {
-    protected activeFilePath: string;
+    protected activeFilePath: string | null;
     protected currentIndentLevel: number;
     private passes;
     private failures;

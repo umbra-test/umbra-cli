@@ -17,9 +17,13 @@ class ConfigFileLoader {
         this.tsExecutor = tsExecutor;
     }
 
-    async loadConfig(configPath: string, cacheDir: string): Promise<Partial<UmbraConfig>> {
+    async loadConfig(configPath: string, cacheDir: string | undefined): Promise<Partial<UmbraConfig> | null> {
         if (!configPath) {
-            return;
+            return Promise.resolve(null);
+        }
+        
+        if (!cacheDir) {
+            throw new Error("Missing cache directory");
         }
 
         const resolvedPath = path.resolve(configPath);
@@ -32,7 +36,7 @@ class ConfigFileLoader {
         }
     }
 
-    private async loadJsConfig(configPath: string): Promise<Partial<UmbraConfig>> {
+    private async loadJsConfig(configPath: string): Promise<Partial<UmbraConfig> | null> {
         if (!configPath.endsWith(".js")) {
             return Promise.resolve(null);
         }
@@ -40,7 +44,7 @@ class ConfigFileLoader {
         return this.statPromise(configPath).then(() => this.requireRef(configPath)).catch(() => null);
     }
 
-    private async loadTsConfig(configPath: string, cacheDir: string): Promise<Partial<UmbraConfig>> {
+    private async loadTsConfig(configPath: string, cacheDir: string): Promise<Partial<UmbraConfig> | null> {
         if (!configPath.endsWith(".ts")) {
             return Promise.resolve(null);
         }
@@ -61,8 +65,8 @@ class ConfigFileLoader {
         return () => path.resolve(cacheDir, fileName + ".js");
     };
 
-    private compileTsConfig = (configPath) => {
-        return (finalPath) => this.tsExecutor.spawn(configPath, finalPath).then(() => finalPath);
+    private compileTsConfig = (configPath: string) => {
+        return (finalPath: string) => this.tsExecutor.spawn(configPath, finalPath).then(() => finalPath);
     }
 }
 

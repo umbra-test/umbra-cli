@@ -10,7 +10,8 @@
     "inlineSourceMap": true,
     "outDir": "lib",
     "declaration": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strict": true
   },
   "include": [
     "src"

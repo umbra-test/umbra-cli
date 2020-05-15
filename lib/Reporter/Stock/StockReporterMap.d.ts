@@ -1,7 +1,5 @@
-import { FancyReporter } from "./FancyReporter";
-import { BasicReporter } from "./BasicReporter";
+import { ReporterConstructor } from "../Reporter";
 declare const StockReporterMap: {
-    basic: typeof BasicReporter;
-    fancy: typeof FancyReporter;
+    [name: string]: ReporterConstructor;
 };
 export { StockReporterMap };

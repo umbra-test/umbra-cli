@@ -55,7 +55,7 @@ class SimpleArgParser<ArgResults> {
             }
         }
 
-        const argResults = {};
+        const argResults: { [name: string]: any } = {};
         for (const argInfo of this.watchedArgs) {
             if (argInfo.type === "boolean") {
                 argResults[argInfo.name] = this.extractBoolean(argInfo.allAliases, trimmedArgv);
@@ -149,4 +149,4 @@ class SimpleArgParser<ArgResults> {
     }
 }
 
-export {SimpleArgParser};
+export { SimpleArgParser };

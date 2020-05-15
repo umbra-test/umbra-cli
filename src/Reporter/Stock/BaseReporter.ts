@@ -9,7 +9,7 @@ import colors from "ansi-colors";
  */
 class BaseReporter implements Reporter {
 
-    protected activeFilePath: string;
+    protected activeFilePath: string | null = null;
     protected currentIndentLevel = 0;
 
     private passes: number = 0;

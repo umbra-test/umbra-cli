@@ -26,4 +26,8 @@ interface Reporter {
 
 }
 
-export {Reporter};
+interface ReporterConstructor {
+    new (): Reporter;
+}
+
+export {Reporter, ReporterConstructor};

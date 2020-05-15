@@ -1,3 +1,3 @@
-import { StartupContext } from "./StartupContext";
-declare const SelectReporters: (context: StartupContext) => StartupContext;
+import { StartupContext, Partialize } from "./StartupContext";
+declare const SelectReporters: (context: Partialize<StartupContext, "config" | "runner">) => StartupContext;
 export { SelectReporters };

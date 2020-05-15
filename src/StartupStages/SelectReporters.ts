@@ -1,10 +1,11 @@
 import {BasicReporter} from "../Reporter/Stock/BasicReporter";
 import {StockReporterMap} from "../Reporter/Stock/StockReporterMap";
-import {StartupContext} from "./StartupContext";
+import {StartupContext, Partialize} from "./StartupContext";
 
-const SelectReporters = (context: StartupContext): StartupContext => {
-    const reporterNames = context.config.reporting.reporters;
-    if (reporterNames.length === 0) {
+const SelectReporters = (context: Partialize<StartupContext, "config"|"runner">): StartupContext => {
+    const reportingConfig = context.config.reporting;
+    const reporterNames = reportingConfig ? reportingConfig.reporters : null;
+    if (!reporterNames || reporterNames.length === 0) {
         context.reporters = [new BasicReporter()];
     } else {
         context.reporters = reporterNames.map((name) => {
@@ -20,7 +21,7 @@ const SelectReporters = (context: StartupContext): StartupContext => {
         });
     }
 
-    return context;
+    return context as StartupContext;
 };
 
 export {SelectReporters};

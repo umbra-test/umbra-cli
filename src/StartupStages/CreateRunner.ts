@@ -1,13 +1,13 @@
-import {StartupContext} from "./StartupContext";
+import {StartupContext, Partialize} from "./StartupContext";
 import {TestRunner} from "@umbra-test/umbra-test-runner";
 
-const CreateRunner = (context: StartupContext): Partial<StartupContext> => {
+const CreateRunner = (context: Partialize<StartupContext, "config">): Partialize<StartupContext, "config"|"runner"> => {
     context.runner = new TestRunner({
         timeoutMs: context.config.timeoutMs,
         stopOnFirstFail: false
     });
 
-    return context;
+    return context as Partialize<StartupContext, "config"|"runner">;
 };
 
 export {CreateRunner};

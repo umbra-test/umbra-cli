@@ -21,7 +21,7 @@ class FancyReporter extends BaseReporter {
     private readonly stdOutInterceptor: WriteStreamInterceptor;
     private readonly stdErrInterceptor: WriteStreamInterceptor;
 
-    private timer: NodeJS.Timeout = null;
+    private timer: NodeJS.Timeout | null = null;
 
     private spinnerIndex = 0;
 
@@ -47,55 +47,58 @@ class FancyReporter extends BaseReporter {
         return Promise.resolve();
     }
 
-    beforeDescribe(title: string) {
+    beforeDescribe(title: string): void {
         this.writeLine(this.getIndentedText(colors.cyan("⤷") + ` ${title}`));
 
         super.beforeDescribe(title);
     };
 
-    beforeTest(title: string) {
+    beforeTest(title: string): void {
         this.startSpinner(title);
 
         super.beforeTest(title);
     };
 
-    runEnd(results: RunResults) {
+    runEnd(results: RunResults): void {
         this.stdOutInterceptor.writeDirect("\u001B[?25h");
 
         this.stdOutInterceptor.stop();
         this.stdErrInterceptor.stop();
     };
 
-    testFail(title: string, error: Error, elapsedMs: number) {
+    testFail(title: string, error: Error, elapsedMs: number): void {
         this.stopSpinner(TestResult.FAIL);
         this.stdErrInterceptor.writeDirect(error.message + "\n");
 
-        const prettyStack = createCallsiteRecord({forError: error}).renderSync({
-            /* TODO: Determine whether to default node_module stripping to true
-            stackFilter(frame) {
-                return !frame.fileName.includes("node_modules");
-            },
-             */
-            frameSize: 3
-        });
-        this.stdErrInterceptor.writeDirect(prettyStack + "\n\n");
+        const callsiteRecord = createCallsiteRecord({forError: error});
+        if (callsiteRecord) {
+            const prettyStack = callsiteRecord.renderSync({
+                /* TODO: Determine whether to default node_module stripping to true
+                stackFilter(frame) {
+                    return !frame.fileName.includes("node_modules");
+                },
+                 */
+                frameSize: 3
+            });
+            this.stdErrInterceptor.writeDirect(prettyStack + "\n\n");
+        }
 
         super.testFail(title, error, elapsedMs);
     };
 
-    testTimeout(title: string, elapsedMs: number, timeoutMs: number) {
+    testTimeout(title: string, elapsedMs: number, timeoutMs: number): void {
         this.stopSpinner(TestResult.TIMEOUT);
 
         super.testTimeout(title, elapsedMs, timeoutMs);
     };
 
-    testSkipped(title: string) {
+    testSkipped(title: string): void {
         this.stopSpinner(TestResult.SKIPPED);
 
         super.testSkipped(title);
     };
 
-    testSuccess(title: string, elapsedMs: number) {
+    testSuccess(title: string, elapsedMs: number): void {
         this.stopSpinner(TestResult.SUCCESS);
 
         super.testSuccess(title, elapsedMs);
@@ -128,8 +131,11 @@ class FancyReporter extends BaseReporter {
     }
 
     private stopSpinner(result: TestResult): void {
+        if (!this.timer) {
+            return;
+        }
+        
         clearInterval(this.timer);
-
         this.stdOutInterceptor.writeDirect(ansiEscapes.cursorBackward(1));
         if (result === TestResult.FAIL) {
             this.stdOutInterceptor.writeDirect(colors.redBright("✘"));

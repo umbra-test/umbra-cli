@@ -6,7 +6,7 @@ class ConfigMerger {
      * Super basic helper method for merging configurations together. Overwrites earlier configs with later ones, with
      * special handling for timeoutMs, which can be either an object or a single number.
      */
-    merge(baseConfig: UmbraConfig, ...configs: Partial<UmbraConfig>[]): UmbraConfig {
+    merge(baseConfig: UmbraConfig, ...configs: (Partial<UmbraConfig> | null)[]): UmbraConfig {
         for (const config of configs) {
             if (!config) {
                 continue;
@@ -14,8 +14,8 @@ class ConfigMerger {
             
             for (const attribute in config) {
                 if (config.hasOwnProperty(attribute)) {
-                    const value = config[attribute];
-                    if (typeof value === "undefined") {
+                    const value = (config as any)[attribute];
+                    if (value === undefined) {
                         continue;
                     }
 
@@ -29,7 +29,7 @@ class ConfigMerger {
                             afterEach: value
                         };
                     } else {
-                        baseConfig[attribute] = config[attribute];
+                        (baseConfig as any)[attribute] = (config as any)[attribute];
                     }
                 }
             }

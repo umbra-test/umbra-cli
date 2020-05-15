@@ -5,8 +5,8 @@
 class WriteStreamInterceptor {
 
     private started: boolean = false;
-    private streamToIntercept: NodeJS.WriteStream;
-    private originalStreamWrite: typeof process.stdout.write;
+    private streamToIntercept: NodeJS.WriteStream | null = null;
+    private originalStreamWrite: typeof process.stdout.write | null = null;
 
     /**
      * Starts the stream interceptor. If passthrough is set to true, then logs will continue to be written to the stream.
@@ -19,7 +19,7 @@ class WriteStreamInterceptor {
         this.streamToIntercept = streamToIntercept;
         this.originalStreamWrite = this.streamToIntercept.write;
 
-        this.streamToIntercept.write = (string) => {
+        this.streamToIntercept.write = (string: string) => {
             const processedText = onWrite(string);
             if (typeof processedText === "string") {
                 this.writeDirect(processedText);
@@ -33,7 +33,7 @@ class WriteStreamInterceptor {
             throw new Error("WriteStreamInterceptor has not been started!");
         }
 
-        this.streamToIntercept.write = this.originalStreamWrite;
+        this.streamToIntercept!.write = this.originalStreamWrite!;
         this.started = false;
     }
 
@@ -47,8 +47,8 @@ class WriteStreamInterceptor {
             throw new Error("WriteStreamInterceptor has not been started!");
         }
 
-        this.originalStreamWrite.apply(this.streamToIntercept, [text]);
+        this.originalStreamWrite!.apply(this.streamToIntercept, [text]);
     }
 }
 
-export {WriteStreamInterceptor};
+export { WriteStreamInterceptor };

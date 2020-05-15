@@ -13,6 +13,8 @@ declare global {
     const __testRunner: TestRunner;
 }
 
+const globalAny: any = global;
+
 const ExportGlobals = (context: StartupContext): StartupContext => {
     const runner = context.runner;
 
@@ -20,13 +22,13 @@ const ExportGlobals = (context: StartupContext): StartupContext => {
     const itOnly = runner.it.only.bind(runner);
     const describeOnly = runner.describe.only.bind(runner);
 
-    const globalFunctions = ["it", "describe", "after", "afterEach", "before", "beforeEach"];
+    const globalFunctions: (keyof TestRunner)[] = ["it", "describe", "after", "afterEach", "before", "beforeEach"];
     for (const fnName of globalFunctions) {
-        global[fnName] = runner[fnName].bind(runner);
+        globalAny[fnName] = runner[fnName].bind(runner);
     }
-    global["it"]["only"] = itOnly;
-    global["describe"]["only"] = describeOnly;
-    global["__testRunner"] = runner;
+    globalAny["it"]["only"] = itOnly;
+    globalAny["describe"]["only"] = describeOnly;
+    globalAny["__testRunner"] = runner;
 
     return context;
 };
