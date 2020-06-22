@@ -1,75 +1,68 @@
 import colors from "ansi-colors";
-
-import {BaseReporter} from "./BaseReporter";
-import {RunResults} from "@umbra-test/umbra-test-runner";
+import {deepEqual} from "@umbra-test/umbra-util";
+import {RunResults, TestInfo, TestResults} from "@umbra-test/umbra-test-runner";
+import {Reporter} from "../Reporter";
 
 /**
  * A basic reporter. Nothing fancy.
  */
-class BasicReporter extends BaseReporter {
+class BasicReporter implements Reporter {
+    private currentDescribeTitleChain: string[] = [];
 
-    private verboseMode = false; // TODO: Add configuration options through umbra.config.ts
-    private filesEvaluated: number = 0;
+    initialize(): Promise<void> {
+        console.log("\n" + colors.whiteBright("☾ Umbra Test"));
+        this.drawHorizontalLine();
 
-    beforeDescribe(title: string) {
-        super.beforeDescribe(title);
-
-        if (this.verboseMode) {
-            console.log(this.getIndentedText(colors.cyan("⤷ ") + title));
-        }
-    };
-
-    beforeTest(title: string) {
-        super.beforeTest(title);
-
-        if (this.verboseMode) {
-            console.log(this.getIndentedText(colors.cyan("⤷ ") + title));
-        }
-    };
-
-    testFail(title: string, error: Error, elapsedMs: number) {
-        super.testFail(title, error, elapsedMs);
-
-        console.log(this.getIndentedText(colors.redBright(`✖ `) + title));
-        this.printPrettyStackTrace(error);
-    };
-
-    testTimeout(title: string, elapsedMs: number, timeoutMs: number) {
-        super.testTimeout(title, elapsedMs, timeoutMs);
-
-        console.log(this.getIndentedText(colors.redBright(`⏲ `) + title));
-    };
-
-    testSuccess(title: string, elapsedMs: number) {
-        super.testSuccess(title, elapsedMs);
+        return Promise.resolve();
     }
 
-    runEnd(results: RunResults) {
+    onTestStart(testInfo: TestInfo): void {
+        // Intentionally blank.
+    }
+
+    onTestResult(testResult: TestResults): void {
+        const describeTitleChain = testResult.testInfo.describeTitleChain;
+        const indentLevel = describeTitleChain.length + 1;
+        if (describeTitleChain.length > 0 && !deepEqual(this.currentDescribeTitleChain, describeTitleChain)) {
+            this.currentDescribeTitleChain = describeTitleChain;
+            console.log(colors.cyan("⤷ ") + describeTitleChain[0]);
+            for (let i = 1; i < describeTitleChain.length; i++) {
+                console.log(this.getIndentedText(colors.cyan("⤷ ") + describeTitleChain[i], i + 1));
+            }
+        }
+
+        if (testResult.result === "fail") {
+            console.log(this.getIndentedText(colors.redBright(`✖ `) + testResult.testInfo.title, indentLevel));
+            console.log(this.getIndentedText(colors.red("⤷ Error: ") + testResult.error!.message, indentLevel + 1));
+        } else if (testResult.result === "timeout") {
+            console.log(this.getIndentedText(colors.redBright(`⏲ `) + testResult.testInfo.title, indentLevel));
+        } else if (testResult.result === "skipped") {
+            console.log(this.getIndentedText(colors.yellow(`SKIPPED `) + testResult.testInfo.title, indentLevel));
+        } else if (testResult.result === "success") {
+            console.log(this.getIndentedText(colors.green(`✓ `) + testResult.testInfo.title, indentLevel));
+        }
+    }
+
+    onRunEnd(results: RunResults): void {
         console.log(`Tests: ${colors.red(results.totalFailures.toString())} failures, ${colors.yellow(results.totalTimeouts.toString())} timeouts, ${colors.green(results.totalSuccesses.toString())} passed, ${results.totalTests} total`);
         console.log(`Time:  ${results.elapsedTimeMs}ms`);
-        console.log(`Files: ${this.filesEvaluated}`);
+        //console.log(`Files: ${this.filesEvaluated}`);
     }
 
-    activeFileChanged(absolutePath: string) {
-        this.filesEvaluated++;
+    private getIndentedText(text: string, indentLevel: number): string {
+        let str = "";
+        for (let i = 0; i < indentLevel; i++) {
+            str += " ";
+        }
+        return str + text;
     }
 
-    private printPrettyStackTrace(error: Error): void {
-        console.log(this.getIndentedText(colors.red("⤷ ") + error.message + "\n", 1));
-
-        /* Temporarily disable pretty stack traces due to an unexpected parse error popping up for some errors.
-        const prettyStack = createCallsiteRecord({forError: error}).renderSync({
-            // TODO: Determine whether to default node_module stripping to true
-            stackFilter(frame) {
-                return !frame.fileName.includes("node_modules");
-            },
-
-            frameSize: 3
-        });
-        console.log(prettyStack + "\n\n");
-        */
+    private drawHorizontalLine(): void {
+        for (let i = 0; i < process.stdout.columns - 1; i++) {
+            process.stdout.write("\u2500");
+        }
+        process.stdout.write("\n");
     }
-
 }
 
 export {BasicReporter};

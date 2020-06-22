@@ -1,18 +1,15 @@
-import { BaseReporter } from "./BaseReporter";
-import { RunResults } from "@umbra-test/umbra-test-runner";
+import { RunResults, TestInfo, TestResults } from "@umbra-test/umbra-test-runner";
+import { Reporter } from "../Reporter";
 /**
  * A basic reporter. Nothing fancy.
  */
-declare class BasicReporter extends BaseReporter {
-    private verboseMode;
-    private filesEvaluated;
-    beforeDescribe(title: string): void;
-    beforeTest(title: string): void;
-    testFail(title: string, error: Error, elapsedMs: number): void;
-    testTimeout(title: string, elapsedMs: number, timeoutMs: number): void;
-    testSuccess(title: string, elapsedMs: number): void;
-    runEnd(results: RunResults): void;
-    activeFileChanged(absolutePath: string): void;
-    private printPrettyStackTrace;
+declare class BasicReporter implements Reporter {
+    private currentDescribeTitleChain;
+    initialize(): Promise<void>;
+    onTestStart(testInfo: TestInfo): void;
+    onTestResult(testResult: TestResults): void;
+    onRunEnd(results: RunResults): void;
+    private getIndentedText;
+    private drawHorizontalLine;
 }
 export { BasicReporter };

@@ -1,16 +1,9 @@
-import { RunResults } from "@umbra-test/umbra-test-runner";
+import { RunResults, TestInfo, TestResults } from "@umbra-test/umbra-test-runner";
 interface Reporter {
     initialize(): Promise<void>;
-    runStart(): void;
-    activeFileChanged(absolutePath: string): void;
-    beforeTest(title: string): void;
-    testSuccess(title: string, elapsedMs: number): void;
-    testFail(title: string, error: Error, elapsedMs: number): void;
-    testTimeout(title: string, elapsedMs: number, timeoutMs: number): void;
-    testSkipped(title: string): void;
-    beforeDescribe(title: string): void;
-    afterDescribe(title: string, elapsedMs: number): void;
-    runEnd(results: RunResults): void;
+    onTestStart(testInfo: TestInfo): void;
+    onTestResult(testResult: TestResults): void;
+    onRunEnd(results: RunResults): void;
 }
 interface ReporterConstructor {
     new (): Reporter;
