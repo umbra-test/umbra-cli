@@ -1,6 +1,6 @@
 import colors from "ansi-colors";
 import {deepEqual} from "@umbra-test/umbra-util";
-import {RunResults, TestInfo, TestResults} from "@umbra-test/umbra-test-runner";
+import {RunResults, TestInfo, TestResult} from "@umbra-test/umbra-test-runner";
 import {Reporter} from "../Reporter";
 
 /**
@@ -20,7 +20,7 @@ class BasicReporter implements Reporter {
         // Intentionally blank.
     }
 
-    onTestResult(testResult: TestResults): void {
+    onTestEnd(testResult: TestResult): void {
         const describeTitleChain = testResult.testInfo.describeTitleChain;
         const indentLevel = describeTitleChain.length + 1;
         if (describeTitleChain.length > 0 && !deepEqual(this.currentDescribeTitleChain, describeTitleChain)) {

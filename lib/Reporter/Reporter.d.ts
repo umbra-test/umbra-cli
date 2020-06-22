@@ -1,8 +1,8 @@
-import { RunResults, TestInfo, TestResults } from "@umbra-test/umbra-test-runner";
+import { RunResults, TestInfo, TestResult } from "@umbra-test/umbra-test-runner";
 interface Reporter {
     initialize(): Promise<void>;
     onTestStart(testInfo: TestInfo): void;
-    onTestResult(testResult: TestResults): void;
+    onTestEnd(testResult: TestResult): void;
     onRunEnd(results: RunResults): void;
 }
 interface ReporterConstructor {
