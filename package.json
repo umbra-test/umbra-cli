@@ -7,7 +7,7 @@
     "url": "https://github.com/umbra-test/umbra-cli.git"
   },
   "bin": {
-    "umbra": "lib/index.cjs.js"
+    "umbra": "lib/bin/index.js"
   },
   "main": "lib/index.cjs.js",
   "types": "lib/index.d.ts",
